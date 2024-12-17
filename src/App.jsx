@@ -6,9 +6,8 @@ function App() {
   const [seconds, setSeconds] = useState(0);
   const [millis, setMillis] = useState(0);
   const [run, setRun] = useState(false);
-  const [lastPause, setLastPause] = useState(null);
+  const [lastPause, setLastPause] = useState([]);
   const [prevTime, setPrevTime] = useState(null);
-  const animationFrameId = useState(null);
   const animationFrameRef = useRef(null);
 
   const zeroPad = (value) => (value < 10 ? `0${value}` : value);
@@ -23,22 +22,18 @@ function App() {
   const handleStopClick = () => {
     if (run) {
       setRun(false);
-      setLastPause({
-        minutes,
-        seconds,
-        millis,
-      });
-      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+      lastPause.unshift(
+        `${zeroPad(minutes)}:${zeroPad(seconds)}:${zeroPad(millis)}`,
+      );
       setPrevTime(null);
     }
   };
 
   const handleResetClick = () => {
-    if (animationFrameId) cancelAnimationFrame(animationFrameId);
     setMinutes(0);
     setSeconds(0);
     setMillis(0);
-    setLastPause(null);
+    setLastPause([]);
     setRun(false);
     setPrevTime(null);
   };
@@ -75,7 +70,6 @@ function App() {
   useEffect(() => {
     if (run) animationFrameRef.current = requestAnimationFrame(updateTimer);
     else {
-      cancelAnimationFrame(animationFrameRef.current);
       setPrevTime(null);
     }
 
@@ -119,10 +113,14 @@ function App() {
         >
           RESET
         </button>
-        <p className="dernierePause">
-          Dernière pause :
-          {lastPause && ` ${zeroPad(lastPause.minutes)}:${zeroPad(lastPause.seconds)}:${zeroPad(lastPause.millis)}`}
-        </p>
+        {lastPause.map((item) => (
+          <p
+            key={item}
+            className="dernierePause"
+          >
+            <span>{item}</span>
+          </p>
+        ))}
       </div>
     </div>
   );
