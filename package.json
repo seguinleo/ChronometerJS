@@ -7,11 +7,11 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "sass": "sass --watch src/assets/sass/style.sass src/assets/css/style.min.css --style compressed"
+    "sass": "sass --watch src/assets/sass/style.sass src/assets/css/style.min.css --style compressed --no-source-map"
   },
   "dependencies": {
-    "react": "^19",
-    "react-dom": "^19"
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",

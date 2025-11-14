@@ -1,80 +1,57 @@
-import React, { useState, useEffect, useRef } from 'react';
-import './assets/css/style.min.css';
+import { useState, useEffect, useRef, useCallback } from 'react'
+import './assets/css/style.min.css'
 
 function App() {
-  const [minutes, setMinutes] = useState(0);
-  const [seconds, setSeconds] = useState(0);
-  const [millis, setMillis] = useState(0);
-  const [run, setRun] = useState(false);
-  const [lastPause, setLastPause] = useState([]);
-  const [prevTime, setPrevTime] = useState(null);
-  const animationFrameRef = useRef(null);
+  const [elapsedTime, setElapsedTime] = useState(0)
+  const [run, setRun] = useState(false)
+  const [lastPause, setLastPause] = useState([])
+  const [startTime, setStartTime] = useState(null)
+  const animationFrameRef = useRef(null)
 
-  const zeroPad = (value) => (value < 10 ? `0${value}` : value);
+  const zeroPad = useCallback((value, length = 2) => {
+    return value.toString().padStart(length, '0')
+  }, [])
 
-  const handleStartClick = () => {
+  const handleToggleClick = useCallback(() => {
     if (!run) {
-      setRun(true);
-      setPrevTime(performance.now());
+      setRun(true)
+      setStartTime(performance.now() - elapsedTime)
+    } else {
+      setRun(false)
+      setLastPause(prev => [
+        `${zeroPad(Math.floor(elapsedTime / 60000))}:${zeroPad(Math.floor((elapsedTime % 60000) / 1000))}:${zeroPad(Math.floor(elapsedTime % 1000), 3)}`,
+        ...prev,
+      ])
     }
-  };
+  }, [run, elapsedTime, zeroPad])
 
-  const handleStopClick = () => {
-    if (run) {
-      setRun(false);
-      lastPause.unshift(
-        `${zeroPad(minutes)}:${zeroPad(seconds)}:${zeroPad(millis)}`,
-      );
-      setPrevTime(null);
+  const handleResetClick = useCallback(() => {
+    setElapsedTime(0)
+    setLastPause([])
+    setRun(false)
+    setStartTime(null)
+  }, [])
+
+  const updateTimer = useCallback((currentTime) => {
+    if (startTime !== null) {
+      const newElapsedTime = currentTime - startTime
+      setElapsedTime(newElapsedTime)
     }
-  };
-
-  const handleResetClick = () => {
-    setMinutes(0);
-    setSeconds(0);
-    setMillis(0);
-    setLastPause([]);
-    setRun(false);
-    setPrevTime(null);
-  };
-
-  const updateTimer = (currentTime) => {
-    if (!prevTime) setPrevTime(currentTime);
-
-    const deltaTime = currentTime - prevTime;
-
-    let updatedMillis = millis + deltaTime;
-    let updatedSeconds = seconds;
-    let updatedMinutes = minutes;
-
-    if (updatedMillis >= 1000) {
-      updatedSeconds += Math.floor(updatedMillis / 1000);
-      updatedMillis %= 1000;
-    }
-    if (updatedSeconds >= 60) {
-      updatedMinutes += Math.floor(updatedSeconds / 60);
-      updatedSeconds %= 60;
-    }
-    if (updatedMinutes >= 60) {
-      handleStopClick();
-      return;
-    }
-
-    setSeconds(updatedSeconds);
-    setMinutes(updatedMinutes);
-    setMillis(Math.round(updatedMillis));
-    setPrevTime(currentTime);
-    animationFrameRef.current = requestAnimationFrame(updateTimer);
-  };
+    animationFrameRef.current = requestAnimationFrame(updateTimer)
+  }, [startTime])
 
   useEffect(() => {
-    if (run) animationFrameRef.current = requestAnimationFrame(updateTimer);
-    else {
-      setPrevTime(null);
+    if (run) {
+      animationFrameRef.current = requestAnimationFrame(updateTimer)
+    } else {
+      cancelAnimationFrame(animationFrameRef.current)
     }
+    return () => cancelAnimationFrame(animationFrameRef.current)
+  }, [run, updateTimer])
 
-    return () => cancelAnimationFrame(animationFrameRef.current);
-  }, [run]);
+  const totalMinutes = Math.floor(elapsedTime / 60000)
+  const totalSeconds = Math.floor((elapsedTime % 60000) / 1000)
+  const totalMillis = Math.floor(elapsedTime % 1000)
 
   return (
     <div className="wrapper">
@@ -84,46 +61,28 @@ function App() {
       <div className="display">
         <div className="numbers">
           <span className="mins">
-            {zeroPad(minutes)}
-            :
+            {zeroPad(totalMinutes)}:
           </span>
           <span className="secs">
-            {zeroPad(seconds)}
-            :
+            {zeroPad(totalSeconds)}:
           </span>
-          <span className="millis">{zeroPad(millis)}</span>
+          <span className="millis">{zeroPad(totalMillis, 3)}</span>
         </div>
       </div>
       <div className="actions">
-        <button
-          type="button"
-          onClick={handleStartClick}
-        >
-          START
+        <button type="button" onClick={handleToggleClick}>
+          {run ? 'STOP' : 'START'}
         </button>
-        <button
-          type="button"
-          onClick={handleStopClick}
-        >
-          STOP
-        </button>
-        <button
-          type="button"
-          onClick={handleResetClick}
-        >
-          RESET
-        </button>
-        {lastPause.map((item) => (
-          <p
-            key={item}
-            className="dernierePause"
-          >
+        <button type="button" onClick={handleResetClick}>RESET</button>
+        {lastPause.map((item, index) => (
+          <p key={index} className="dernierePause">
+            <span>{lastPause.length - index}</span>
             <span>{item}</span>
           </p>
         ))}
       </div>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
