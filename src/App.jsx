@@ -8,22 +8,23 @@ function App() {
   const [startTime, setStartTime] = useState(null)
   const animationFrameRef = useRef(null)
 
-  const zeroPad = useCallback((value, length = 2) => {
-    return value.toString().padStart(length, '0')
-  }, [])
+  const zeroPad = (value, length = 2) => value.toString().padStart(length, '0')
 
   const handleToggleClick = useCallback(() => {
     if (!run) {
       setRun(true)
       setStartTime(performance.now() - elapsedTime)
     } else {
-      setRun(false)
+      const currentTime = performance.now()
+      const newElapsedTime = currentTime - startTime
+      setElapsedTime(newElapsedTime)
       setLastPause(prev => [
-        `${zeroPad(Math.floor(elapsedTime / 60000))}:${zeroPad(Math.floor((elapsedTime % 60000) / 1000))}:${zeroPad(Math.floor(elapsedTime % 1000), 3)}`,
+        `${zeroPad(Math.floor(newElapsedTime / 60000))}:${zeroPad(Math.floor((newElapsedTime % 60000) / 1000))}:${zeroPad(Math.floor(newElapsedTime % 1000), 3)}`,
         ...prev,
       ])
+      setRun(false)
     }
-  }, [run, elapsedTime, zeroPad])
+  }, [run, elapsedTime, startTime, zeroPad])
 
   const handleResetClick = useCallback(() => {
     setElapsedTime(0)
