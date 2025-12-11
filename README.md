@@ -9,5 +9,3 @@ Chronometer site developed with React and Vite.
 ``npm run sass`` to compile sass files
 
 ``npm run build`` to build the project
-
-![0](https://github.com/PouletEnSlip/ChronometerJS/blob/main/image.png)
