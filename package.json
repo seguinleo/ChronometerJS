@@ -10,7 +10,7 @@
     "sass": "sass --watch src/assets/sass/style.sass src/assets/css/style.min.css --style compressed --no-source-map"
   },
   "dependencies": {
-    "react": "^19.2.1",
+    "react": "^19.2.3",
     "react-dom": "^19.2.1"
   },
   "devDependencies": {
