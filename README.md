@@ -1,5 +1,5 @@
 # ChronometerJS
-Chronometer site developed with React and Vite.
+Web chronometer developed with React/Typescript and Vite.
 
 ## Installation:
 ``npm i`` to install dependencies
