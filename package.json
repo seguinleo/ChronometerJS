@@ -6,8 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview",
-    "sass": "sass --watch src/assets/sass/style.sass src/assets/css/style.min.css --style compressed --no-source-map"
+    "preview": "vite preview"
   },
   "dependencies": {
     "react": "^19.2.5",
@@ -17,7 +16,7 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.1",
-    "typescript": "~6.0.2",
-    "vite": "^8.0.8"
+    "typescript": "~6.0.3",
+    "vite": "^8.0.10"
   }
 }

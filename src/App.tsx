@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
-import './assets/css/style.min.css'
+import './assets/css/style.css'
 
 function App() {
   const [elapsedTime, setElapsedTime] = useState<number>(0)
