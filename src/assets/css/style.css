@@ -1,23 +1,7 @@
-@font-face {
-    font-family: OpenSans;
-    font-display: swap;
-    font-style: normal;
-    font-weight: 400;
-    src: url(/assets/fonts/OpenSans.woff2) format("woff2");
-}
-
-@font-face {
-    font-family: OpenSans;
-    font-display: swap;
-    font-style: normal;
-    font-weight: 700;
-    src: url(/assets/fonts/OpenSans-700.woff2) format("woff2");
-}
-
 html {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
     background: #6570ff;
-    font-family: OpenSans, Helvetica Neue, Arial, sans-serif;
+    font-family: Helvetica Neue, Arial, sans-serif;
     -webkit-user-select: none;
     user-select: none;
 }
@@ -86,7 +70,7 @@ button {
     color: #fff;
     cursor: pointer;
     display: block;
-    font-family: OpenSans, Helvetica Neue, Arial, sans-serif;
+    font-family: Helvetica Neue, Arial, sans-serif;
     font-size: 25px;
     height: 75px;
     margin: 1rem auto;
